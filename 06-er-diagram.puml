@@ -1,0 +1,195 @@
+@startuml er-diagram
+title tax_queue: модели мантиқӣ (ER)
+hide circle
+skinparam linetype ortho
+
+entity regions {
+ * id : INT <<PK>>
+ --
+ * name : VARCHAR(100) <<UQ>>
+ * code : VARCHAR(10) <<UQ>>
+}
+
+entity tax_offices {
+ * id : INT <<PK>>
+ --
+ * region_id : INT <<FK>>
+ * name : VARCHAR(150)
+ * address : VARCHAR(255)
+ phone : VARCHAR(20)
+ * work_start : TIME
+ * work_end : TIME
+ head_employee_id : INT <<FK>>
+ * is_active : TINYINT(1)
+}
+
+entity positions {
+ * id : INT <<PK>>
+ --
+ * title : VARCHAR(100) <<UQ>>
+ * category : ENUM('management','inspector','operator','technical')
+}
+
+entity employees {
+ * id : INT <<PK>>
+ --
+ * tax_office_id : INT <<FK>>
+ * position_id : INT <<FK>>
+ * last_name : VARCHAR(60)
+ * first_name : VARCHAR(60)
+ middle_name : VARCHAR(60)
+ phone : VARCHAR(20)
+ email : VARCHAR(120) <<UQ>>
+ * hire_date : DATE
+ * status : ENUM('active','on_leave','dismissed')
+ * created_at : DATETIME
+ * updated_at : DATETIME
+}
+
+entity users {
+ * id : INT <<PK>>
+ --
+ employee_id : INT <<FK, UQ>>
+ * username : VARCHAR(50) <<UQ>>
+ * password_hash : VARCHAR(255)
+ * role : ENUM('admin','manager','operator','auditor')
+ * is_active : TINYINT(1)
+ last_login_at : DATETIME
+}
+
+entity windows {
+ * id : INT <<PK>>
+ --
+ * tax_office_id : INT <<FK>>
+ * number : TINYINT
+ * status : ENUM('open','break','closed')
+}
+
+entity service_categories {
+ * id : INT <<PK>>
+ --
+ * name : VARCHAR(100) <<UQ>>
+ * prefix : CHAR(1) <<UQ>>
+}
+
+entity services {
+ * id : INT <<PK>>
+ --
+ * category_id : INT <<FK>>
+ * name : VARCHAR(200)
+ description : VARCHAR(500)
+ * avg_duration_min : SMALLINT
+ * is_active : TINYINT(1)
+}
+
+entity office_services {
+ * id : INT <<PK>>
+ --
+ * tax_office_id : INT <<FK>>
+ * service_id : INT <<FK>>
+ max_daily_tickets : SMALLINT
+ * is_available : TINYINT(1)
+}
+
+entity taxpayers {
+ * id : INT <<PK>>
+ --
+ * tin : VARCHAR(12) <<UQ>>
+ * taxpayer_type : ENUM('individual','sole_proprietor','legal_entity')
+ last_name : VARCHAR(60)
+ first_name : VARCHAR(60)
+ middle_name : VARCHAR(60)
+ organization_name : VARCHAR(200)
+ * phone : VARCHAR(20)
+ email : VARCHAR(120)
+ * created_at : DATETIME
+}
+
+entity appointments {
+ * id : INT <<PK>>
+ --
+ * taxpayer_id : INT <<FK>>
+ * tax_office_id : INT <<FK>>
+ * service_id : INT <<FK>>
+ * appointment_date : DATE
+ * slot_start : TIME
+ * status : ENUM('booked','confirmed','arrived','cancelled','missed')
+ * created_at : DATETIME
+}
+
+entity tickets {
+ * id : INT <<PK>>
+ --
+ * queue_date : DATE
+ * ticket_number : VARCHAR(10)
+ * tax_office_id : INT <<FK>>
+ * service_id : INT <<FK>>
+ taxpayer_id : INT <<FK>>
+ appointment_id : INT <<FK, UQ>>
+ window_id : INT <<FK>>
+ employee_id : INT <<FK>>
+ * source : ENUM('kiosk','mobile','web','reception')
+ * priority : ENUM('normal','elderly','disabled','pregnant')
+ * status : ENUM('waiting','called','serving','completed','no_show','cancelled')
+ * created_at : DATETIME
+ called_at : DATETIME
+ started_at : DATETIME
+ finished_at : DATETIME
+}
+
+entity ticket_events {
+ * id : INT <<PK>>
+ --
+ * ticket_id : INT <<FK>>
+ user_id : INT <<FK>>
+ * event_type : ENUM('created','called','recalled','started','completed','no_show','cancelled','transferred')
+ * occurred_at : DATETIME
+ note : VARCHAR(255)
+}
+
+entity service_ratings {
+ * id : INT <<PK>>
+ --
+ * ticket_id : INT <<FK, UQ>>
+ * rating : TINYINT
+ comment : VARCHAR(500)
+ * created_at : DATETIME
+}
+
+entity notifications {
+ * id : INT <<PK>>
+ --
+ * taxpayer_id : INT <<FK>>
+ ticket_id : INT <<FK>>
+ * channel : ENUM('sms','email','push')
+ * message : VARCHAR(500)
+ * status : ENUM('queued','sent','failed')
+ * created_at : DATETIME
+ sent_at : DATETIME
+}
+
+regions ||--o{ tax_offices
+tax_offices ||--o{ employees
+tax_offices |o--o| employees : head_employee_id
+positions ||--o{ employees
+employees |o--o| users
+tax_offices ||--o{ windows
+service_categories ||--o{ services
+tax_offices ||--o{ office_services
+services ||--o{ office_services
+tax_offices ||--o{ tickets
+services ||--o{ tickets
+taxpayers |o--o{ tickets
+appointments |o--o| tickets
+windows |o--o{ tickets
+employees |o--o{ tickets
+taxpayers ||--o{ appointments
+tax_offices ||--o{ appointments
+services ||--o{ appointments
+tickets ||--o{ ticket_events
+users |o--o{ ticket_events
+tickets ||--o| service_ratings
+taxpayers ||--o{ notifications
+tickets |o--o{ notifications
+
+@enduml
