@@ -1,0 +1,115 @@
+/* public/assets/css/app.css — стилҳои барнома болои Bootstrap 5.3
+   Рангҳо ва шрифт аз docs/09-design/ui-kit.md. Пас аз bootstrap.min.css пайваст мешавад. */
+
+/* 1. Токенҳои дизайн (--nq-*) ва аз нав муайян кардани тағйирёбандаҳои Bootstrap (--bs-*) */
+:root {
+  --nq-primary: #0D6EFD;
+  --nq-primary-dark: #0A58CA;
+  --nq-primary-light: #CFE2FF;
+  --nq-bg: #F8F9FA;
+  --nq-border: #DEE2E6;
+  --nq-text: #212529;
+  --nq-muted: #5C636A;          /* контраст ≥ 4.5:1 ҳам дар фони сафед, ҳам дар --nq-bg */
+  --nq-dark: #212529;
+  --nq-success-dark: #0F5132;
+  --nq-warning-dark: #664D03;
+  --nq-danger-dark: #842029;
+  --nq-info-dark: #055160;
+  --nq-radius: 8px;
+
+  --bs-body-font-family: "Noto Sans", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --bs-body-font-size: 1rem;     /* 16px */
+  --bs-body-color: var(--nq-text);
+  --bs-body-bg: var(--nq-bg);
+  --bs-border-color: var(--nq-border);
+  --bs-border-radius: var(--nq-radius);
+  --bs-link-color: var(--nq-primary-dark);
+  --bs-link-color-rgb: 10, 88, 202;
+  --bs-primary: var(--nq-primary);
+  --bs-primary-rgb: 13, 110, 253;
+  --bs-secondary-color: var(--nq-muted);
+}
+
+/* 2. Типографика */
+h1 { font-size: 2rem; font-weight: 700; line-height: 1.25; }
+h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.33; }
+h3 { font-size: 1.25rem; font-weight: 600; line-height: 1.4; }
+.text-muted, .text-secondary { color: var(--nq-muted) !important; }
+
+/* 3. Тугмаҳо: ҷои пахш ≥ 44px (мувофиқ ба UI-kit) */
+.btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; font-weight: 500; }
+.btn-sm { min-height: 44px; padding-inline: .9rem; font-size: 1rem; }
+.btn-primary {
+  --bs-btn-bg: var(--nq-primary);
+  --bs-btn-border-color: var(--nq-primary);
+  --bs-btn-hover-bg: var(--nq-primary-dark);
+  --bs-btn-hover-border-color: var(--nq-primary-dark);
+}
+.btn-outline-primary {
+  --bs-btn-color: var(--nq-primary-dark);
+  --bs-btn-border-color: var(--nq-primary);
+  --bs-btn-hover-bg: var(--nq-primary);
+  --bs-btn-hover-color: #fff;
+}
+.form-control, .form-select { min-height: 44px; }
+:focus-visible { outline: 3px solid rgba(13, 110, 253, .5); outline-offset: 2px; }
+
+/* 4. Шапка (Flexbox дар Bootstrap: d-flex, me-auto) */
+.app-navbar { background: var(--nq-dark); }
+.app-navbar .navbar-brand { font-weight: 600; font-size: 1.25rem; }
+.app-navbar .nav-link { min-height: 44px; display: flex; align-items: center; }
+.app-navbar .nav-link.active { font-weight: 600; text-decoration: underline; text-underline-offset: 6px; }
+.role-badge { background: var(--nq-primary-light); color: #084298; font-weight: 600; }
+
+/* 5. Корт ва ҷадвалҳо */
+.card { border-color: var(--nq-border); border-radius: var(--nq-radius); }
+.card-header { font-weight: 600; background: #fff; }
+.table > :not(caption) > * > * { padding-block: .75rem; }
+.stat-card .stat-number { font-size: 2.5rem; font-weight: 700; line-height: 1.1; color: var(--nq-primary-dark); }
+.stat-card .stat-label { color: var(--nq-muted); }
+
+/* 6. Нишонҳои ҳолат: номи класс = қимати ENUM дар tickets.status. Ҳолат бо МАТН навишта мешавад */
+.badge.status { font-weight: 600; font-size: .875rem; border-radius: 999px; padding: .35em .75em; }
+.status-waiting    { background: #FFF3CD; color: var(--nq-warning-dark); }
+.status-called     { background: #CFE2FF; color: #084298; }
+.status-in_service { background: #CFF4FC; color: var(--nq-info-dark); }
+.status-done       { background: #D1E7DD; color: var(--nq-success-dark); }
+.status-no_show    { background: #F8D7DA; color: var(--nq-danger-dark); }
+.status-cancelled  { background: var(--nq-border); color: var(--nq-text); }
+
+/* 7. Доираи рақами талон (мисли TicketCard дар Figma) */
+.ticket-circle {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--nq-primary-light); color: #084298; font-weight: 700; font-size: .95rem;
+}
+.ticket-circle-lg { width: 112px; height: 112px; font-size: 1.75rem; }
+
+/* 8. Рӯйхати «ном — қиммат» бо CSS Grid (як сутун дар телефон) */
+.details { display: grid; grid-template-columns: 200px 1fr; gap: .5rem 1rem; margin: 0; }
+.details dt { color: var(--nq-muted); font-weight: 400; }
+.details dd { margin: 0; }
+
+/* 9. Тарҳи рӯйхати хизматҳо бо CSS Grid */
+.service-docs { display: grid; gap: .25rem; padding-left: 1.1rem; margin: 0; }
+
+/* 10. Мобилӣ: ҷадвал → кортҳо (медиазапрос 1) */
+@media (max-width: 767.98px) {
+  .table-cards thead { display: none; }
+  .table-cards tr { display: block; padding: .75rem 1rem; border-bottom: 1px solid var(--nq-border); }
+  .table-cards td { display: block; border: 0; padding: .125rem 0 !important; }
+  .table-cards td[data-label]::before { content: attr(data-label) ": "; color: var(--nq-muted); font-size: .875rem; }
+  .table-cards td.cell-actions { padding-top: .5rem !important; }
+  h1 { font-size: 1.625rem; }
+}
+
+/* 11. Қарта дар экрани хурд (медиазапрос 2) */
+@media (max-width: 575.98px) {
+  .details { grid-template-columns: 1fr; gap: 0; }
+  .details dd { margin-bottom: .5rem; }
+  .ticket-circle-lg { width: 96px; height: 96px; font-size: 1.5rem; }
+}
+
+/* 12. Подвал ва чоп */
+.app-footer { color: var(--nq-muted); font-size: .875rem; }
+@media print { .app-navbar, .app-footer, form[role="search"], .btn { display: none !important; } }
