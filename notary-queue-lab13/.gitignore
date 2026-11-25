@@ -1,0 +1,5 @@
+# Танзимоти воқеӣ бо парол дар Git нест (нусхаи config.example.php-ро созед)
+config/config.php
+.env
+*.sqlite
+.DS_Store
