@@ -1,0 +1,9 @@
+# Ҳамаи дархостҳо, ки файл ё папкаи воқеӣ нестанд, ба front controller мераванд.
+# Талаб мекунад: mod_rewrite (XAMPP: фаъол) ва AllowOverride All барои папкаи public.
+Options -Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>

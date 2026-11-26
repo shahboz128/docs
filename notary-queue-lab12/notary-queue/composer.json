@@ -1,0 +1,20 @@
+{
+    "name": "student/notary-queue",
+    "description": "Навбати электронӣ барои идораи нотариалӣ (лоиҳаи курсӣ)",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.2",
+        "ext-pdo": "*",
+        "ext-mbstring": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": false,
+        "sort-packages": true
+    }
+}

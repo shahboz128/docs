@@ -1,0 +1,15 @@
+# Вобастагиҳои Composer (бо `composer install` барқарор мешавад)
+/vendor/
+# Танзимоти воқеӣ бо парол дар Git нест (нусхаи config.example.php-ро созед)
+/config/config.php
+.env
+*.sqlite
+# Боргириҳо
+/public/uploads/*
+!/public/uploads/.gitkeep
+# Кэшҳои тест ва муҳаррир
+.phpunit.cache/
+.phpunit.result.cache
+.idea/
+.vscode/
+.DS_Store

@@ -1,0 +1,49 @@
+# docs/12-routes.txt — натиҷаи curl барои ҳамаи роутҳо (Лаб 12)
+# Сервер: php -S localhost:8000 -t public   |   PHP 8.3.6   |   сана: 2026-11-26
+# Формат: <усул> <роҳ> → <код HTTP>   (сарлавҳаи Allow барои 405)
+# Эзоҳ: маълумот аз SQLite-и санҷишӣ (database/seed.sql) гирифта шудааст; бо MariaDB натиҷаи кодҳо ҳамон аст.
+
+## Роутҳои ҷадвали ТТ
+GET   /                      → 200
+GET   /tickets               → 200
+GET   /tickets/create        → 200
+GET   /tickets/1             → 200
+GET   /tickets/1/edit        → 200
+GET   /services              → 200
+GET   /reports/queue         → 200
+GET   /api/tickets           → 200
+
+## POST-роутҳо (бе маълумот: 422 = форма санҷида шуд, 302 = редирект)
+POST  /tickets/create        → 422
+POST  /tickets/1/edit        → 422
+POST  /services/create       → 422
+
+## 404 — роҳи номавҷуд ва {id} номавҷуд / ғайрирақамӣ
+GET   /nope                  → 404
+GET   /tickets/99999         → 404
+GET   /tickets/abc           → 404
+GET   /tickets/1/edit/x      → 404
+
+## 405 — роҳ ҳаст, усул нодуруст (бо сарлавҳаи Allow)
+POST  /                      → 405   Allow: GET
+POST  /tickets               → 405   Allow: GET
+GET   /tickets/1/cancel      → 405   Allow: POST
+GET   /services/create       → 405   Allow: POST
+POST  /api/tickets           → 405   Allow: GET
+
+## Саҳифаи 404 дар макети умумӣ (қисми аввали HTML)
+<title>Хатои 404 — Нотариат · Навбат</title>
+<a class="navbar-brand" href="/">Нотариат · Навбат</a>
+<p class="display-3 fw-bold mb-2">404</p>
+<h1 class="h3">Саҳифа ёфт нашуд</h1>
+<footer class="app-footer container py-4 text-center">
+
+## url(): пайвандҳо дар HTML (бе basePath дар php -S)
+href="/"
+href="/assets/css/app.css"
+href="/reports/queue"
+href="/services"
+href="/tickets"
+href="/tickets/1"
+href="/tickets/1/edit"
+href="/tickets/14"
