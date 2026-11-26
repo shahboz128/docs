@@ -1,0 +1,107 @@
+@startuml class
+title tax-queue: диаграммаи синфҳо
+skinparam classAttributeIconSize 0
+hide empty members
+
+package "Модели доменӣ" {
+  class TaxOffice <<entity>> {
+    +id: int
+    +name: string
+    +address: string
+    +workHours: string
+  }
+  class Service <<entity>> {
+    +id: int
+    +name: string
+    +code: string
+    +avgMinutes: int
+  }
+  class Counter <<entity>> {
+    +id: int
+    +number: int
+    +officeId: int
+    +isActive: bool
+  }
+  class Taxpayer <<entity>> {
+    +id: int
+    +tin: string
+    +lastName: string
+    +firstName: string
+    +phone: ?string
+    +fullName(): string
+  }
+  class Ticket <<entity>> {
+    +id: int
+    +number: string
+    +status: TicketStatus
+    +createdAt: datetime
+    +calledAt: ?datetime
+    +finishedAt: ?datetime
+    +waitMinutes(): int
+  }
+  class User <<entity>> {
+    +id: int
+    +username: string
+    -passwordHash: string
+    +role: Role
+    +isActive: bool
+  }
+  enum TicketStatus {
+    waiting
+    called
+    serving
+    completed
+    missed
+    cancelled
+  }
+  enum Role {
+    admin
+    supervisor
+    operator
+  }
+}
+
+TaxOffice "1" *-- "1..*" Counter : дорад >
+TaxOffice "1" -- "0..*" Ticket : қабул мекунад >
+Service "1" -- "0..*" Ticket : барои хизмат >
+Counter "0..*" -- "1..*" Service : хизмат мерасонад >
+Counter "0..1" -- "0..*" Ticket : мебарад >
+Taxpayer "0..1" -- "0..*" Ticket : мегирад >
+User "1" -- "0..*" Counter : кор мекунад дар >
+Ticket ..> TicketStatus
+User ..> Role
+
+package "Замима (src/)" {
+  class TicketController {
+    -repo: TicketRepository
+    -auth: Auth
+    +index(): void
+    +create(): void
+    +store(): void
+    +callNext(counterId: int): void
+    +start(id: int): void
+    +complete(id: int): void
+    +markMissed(id: int): void
+  }
+  class TicketRepository {
+    -db: Database
+    +findById(id: int): ?array
+    +findWaiting(officeId: int): array
+    +create(data: array): int
+    +updateStatus(id: int, status: string, counterId: int): bool
+  }
+  class Database {
+    -pdo: PDO
+    +pdo(): PDO
+  }
+  class Auth {
+    +user(): ?array
+    +hasRole(role: string): bool
+  }
+}
+
+TicketController --> TicketRepository
+TicketController --> Auth
+TicketRepository --> Database
+TicketRepository ..> Ticket : мехонад/менависад
+@enduml

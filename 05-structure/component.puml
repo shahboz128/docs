@@ -1,0 +1,46 @@
+@startuml component
+title tax-queue: компонентҳо (MVC, се сатҳ)
+skinparam defaultFontName DejaVu Sans
+skinparam dpi 150
+
+node "Мизоҷ" {
+  [Браузер\n(HTML, Bootstrap 5.3, app.js)] as Browser
+  [Табло ва киоск\n(экрани навбат)] as Board
+}
+
+node "Веб-сервер (Apache дар XAMPP / Nginx + PHP-FPM)" {
+  package "Сатҳи муаррифӣ" {
+    [public/index.php\n(front controller)] as Front
+    [views/*.php\n(шаблонҳо)] as Views
+    [Core\\View] as View
+  }
+  package "Сатҳи мантиқ" {
+    [Core\\Router] as Router
+    [Controllers\n(Ticket, Queue, Service,\nAuth, Dashboard, Report)] as Controllers
+    [Core\\Auth, Session,\nCsrf, Validator] as Services
+  }
+  package "Сатҳи дастрасӣ ба додаҳо" {
+    [Repositories\n(Ticket, ServiceType, Branch,\nWindow, User)] as Repos
+    [Core\\Database\n(PDO)] as Db
+  }
+}
+
+database "MySQL / MariaDB\ntax_queue" as MySQL
+
+Browser -down-> Front : HTTP (GET/POST)
+Board .down.> Front : fetch /api/queue (JSON)
+Front -down-> Router
+Router -down-> Controllers
+Controllers -down-> Services
+Controllers -down-> Repos
+Controllers -up-> View
+View -right-> Views
+Repos -down-> Db
+Db -down-> MySQL : PDO, TCP 3306
+
+legend right
+  Model = Repositories + Database
+  View = Core\View + views/*.php
+  Controller = Controllers (тавассути Router)
+endlegend
+@enduml
